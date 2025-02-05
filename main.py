@@ -1,3 +1,4 @@
+import sys
 import pygame
 from player import Player
 from asteroid import Asteroid
@@ -36,6 +37,11 @@ def main():
 
         for object in groupUpdate:
             object.update(dt)
+
+        for object in groupAsteroids:
+            if object.collisionCheck(player):
+                print("Game over!")
+                sys.exit()
 
         for object in groupDraw:
             object.draw(screen)
