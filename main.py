@@ -5,6 +5,7 @@ from asteroid import Asteroid
 from asteroidfield import AsteroidField
 from constants import *
 from shot import Shot
+from scoreboard import Scoreboard
 
 def main():
     pygame.init()
@@ -18,25 +19,21 @@ def main():
     groupShots = pygame.sprite.Group()
 
     Player.containers = (groupUpdate, groupDraw)
-    Asteroid.containers = (groupAsteroids,groupUpdate, groupDraw)
+    Asteroid.containers = (groupAsteroids, groupUpdate, groupDraw)
     AsteroidField.containers = (groupUpdate)
     Shot.containers = (groupShots, groupUpdate, groupDraw)
 
-
-    player = Player(SCREEN_WIDTH/2,SCREEN_HEIGHT/2)
+    player = Player(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)
     asteroidField = AsteroidField()
- 
-
-
+    scoreboard = Scoreboard()
 
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 return
 
-        #Fill screen background with black
+        # Fill screen background with black
         screen.fill("Black")
-
 
         for object in groupUpdate:
             object.update(dt)
@@ -51,16 +48,19 @@ def main():
                 if asteroid.collisionCheck(bullet):
                     asteroid.split()
                     bullet.kill()
+                    scoreboard.increment()
 
         for object in groupDraw:
             object.draw(screen)
 
-        #Refresh screen
+        # Draw the scoreboard
+        scoreboard.draw(screen)
+
+        # Refresh screen
         pygame.display.flip()
 
-        #Pause refresh for 1/60th of a second and return delta time in seconds
+        # Pause refresh for 1/60th of a second and return delta time in seconds
         dt = gameClock.tick(60) / 1000
-
 
 if __name__ == "__main__":
     main()
